@@ -47,22 +47,22 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+    <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+      <div className="max-w-md w-full space-y-8 bg-card p-8 rounded-lg shadow-md border border-border">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-foreground">
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link href="/login" className="font-medium text-accent hover:text-accent/80 transition-colors">
               Sign in
             </Link>
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm text-center">
+          <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm text-center border border-destructive/20">
             {error}
           </div>
         )}
@@ -71,12 +71,12 @@ export default function RegisterPage() {
           <div className="rounded-md shadow-sm -space-y-px">
             {/* Name */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
+              <label className="block text-sm font-medium text-foreground">Full Name</label>
               <input
                 name="name"
                 type="text"
                 required
-                className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border border-input bg-background text-foreground rounded-md shadow-sm focus:outline-none focus:ring-ring focus:border-ring sm:text-sm transition-colors"
                 value={formData.name}
                 onChange={handleChange}
               />
@@ -84,12 +84,12 @@ export default function RegisterPage() {
 
             {/* Email */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">College Email</label>
+              <label className="block text-sm font-medium text-foreground">College Email</label>
               <input
                 name="email"
                 type="email"
                 required
-                className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border border-input bg-background text-foreground rounded-md shadow-sm focus:outline-none focus:ring-ring focus:border-ring sm:text-sm transition-colors"
                 value={formData.email}
                 onChange={handleChange}
               />
@@ -97,12 +97,12 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <label className="block text-sm font-medium text-foreground">Password</label>
               <input
                 name="password"
                 type="password"
                 required
-                className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border border-input bg-background text-foreground rounded-md shadow-sm focus:outline-none focus:ring-ring focus:border-ring sm:text-sm transition-colors"
                 value={formData.password}
                 onChange={handleChange}
               />
@@ -111,10 +111,10 @@ export default function RegisterPage() {
             {/* Branch & Year Row */}
             <div className="flex gap-4 mb-4">
               <div className="w-1/2">
-                <label className="block text-sm font-medium text-gray-700">Branch</label>
+                <label className="block text-sm font-medium text-foreground">Branch</label>
                 <select
                   name="branch"
-                  className="text-black mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-input bg-background text-foreground focus:outline-none focus:ring-ring focus:border-ring sm:text-sm rounded-md transition-colors"
                   value={formData.branch}
                   onChange={handleChange}
                 >
@@ -126,10 +126,10 @@ export default function RegisterPage() {
                 </select>
               </div>
               <div className="w-1/2">
-                <label className="block text-sm font-medium text-gray-700">Year</label>
+                <label className="block text-sm font-medium text-foreground">Year</label>
                 <select
                   name="year"
-                  className="text-black mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-input bg-background text-foreground focus:outline-none focus:ring-ring focus:border-ring sm:text-sm rounded-md transition-colors"
                   value={formData.year}
                   onChange={handleChange}
                 >
@@ -145,7 +145,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring disabled:opacity-50 transition-colors"
           >
             {loading ? "Creating Account..." : "Sign Up"}
           </button>

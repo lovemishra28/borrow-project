@@ -12,31 +12,35 @@ export async function PATCH(
     const token = request.cookies.get("token")?.value;
     if (!token) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-    const { status } = await request.json(); // e.g., "ACTIVE", "COMPLETED", "REJECTED"
+    // Extract responseMessage along with status
+    const { status, responseMessage } = await request.json(); 
     const { id } = await params;
     const transactionId = id;
 
     await connectToDatabase();
 
-    // 1. Find the transaction
     const transaction = await Transaction.findById(transactionId);
     if (!transaction) {
       return NextResponse.json({ message: "Transaction not found" }, { status: 404 });
     }
 
-    // 2. Update Transaction Status
+    // Update Status
     transaction.status = status;
+    
+    // Update Message if provided
+    if (responseMessage) {
+        transaction.responseMessage = responseMessage;
+    }
+
     await transaction.save();
 
-    // 3. Update Component Status based on Transaction
-    // If we activate a loan, mark component as BORROWED
+    // Logic for Component Status
     if (status === "ACTIVE") {
       await Component.findByIdAndUpdate(transaction.componentId, {
         status: "BORROWED",
       });
     }
 
-    // If we complete a loan (return it) or reject it, mark component as AVAILABLE
     if (status === "COMPLETED" || status === "REJECTED" || status === "CANCELLED") {
       await Component.findByIdAndUpdate(transaction.componentId, {
         status: "AVAILABLE",

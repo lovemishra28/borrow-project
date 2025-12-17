@@ -4,11 +4,12 @@ export interface ITransaction {
   lenderId: mongoose.Types.ObjectId;
   borrowerId: mongoose.Types.ObjectId;
   componentId: mongoose.Types.ObjectId;
-  status: "PENDING" | "APPROVED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+  status: "PENDING" | "APPROVED" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "REJECTED";
   startDate?: Date;
   endDate?: Date;
   lenderRating?: number;
   borrowerRating?: number;
+  responseMessage?: string; // New field for contact info or rejection reason
 }
 
 const TransactionSchema = new Schema<ITransaction>(
@@ -18,13 +19,14 @@ const TransactionSchema = new Schema<ITransaction>(
     componentId: { type: Schema.Types.ObjectId, ref: "Component", required: true },
     status: { 
       type: String, 
-      enum: ["PENDING", "APPROVED", "ACTIVE", "COMPLETED", "CANCELLED"], 
+      enum: ["PENDING", "APPROVED", "ACTIVE", "COMPLETED", "CANCELLED", "REJECTED"], 
       default: "PENDING" 
     },
     startDate: { type: Date },
     endDate: { type: Date },
     lenderRating: { type: Number, min: 1, max: 5 },
     borrowerRating: { type: Number, min: 1, max: 5 },
+    responseMessage: { type: String }, // Store the message here
   },
   { timestamps: true }
 );
