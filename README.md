@@ -2,7 +2,7 @@
 
 CampusShare is a full-stack web application designed for university students to foster a collaborative and resourceful campus environment. It allows students to borrow and lend electronic components, showcase their personal projects, and build a reputation within the community.
 
-![CampusShare Demo](https://place-hold.it/1200x600?text=CampusShare+App+Screenshot&fontsize=48)
+![CampusShare Demo](https://campus-share-topaz.vercel.app/)
 *A placeholder for a live demo screenshot.*
 
 ---
