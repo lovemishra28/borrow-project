@@ -2,15 +2,21 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import connectToDatabase from "@/lib/db";
 import Project from "@/models/Project";
-import User from "@/models/User"; // Import to ensure Model is registered
+import User from "@/models/User"; 
+
+// Force the page to be dynamic so it always fetches the latest data
+export const dynamic = "force-dynamic";
 
 // Function to fetch recent projects (Only runs on server)
 async function getRecentProjects() {
   try {
     await connectToDatabase();
-    // Ensure User model is registered before population
-    // (Just importing it at the top is usually enough with Mongoose)
     
+    // CRITICAL FIX: Explicitly reference the User model here.
+    // This prevents Next.js from "tree-shaking" (removing) the User model file in production,
+    // which fixes the "MissingSchemaError" during population.
+    const userModelAvailable = User; 
+
     const projects = await Project.find({})
       .sort({ createdAt: -1 })
       .limit(3)
@@ -19,6 +25,7 @@ async function getRecentProjects() {
     // Serialize Mongoose objects to plain JSON
     return JSON.parse(JSON.stringify(projects));
   } catch (error) {
+    // Log the actual error so you can see it in Vercel Logs if it fails again
     console.error("Error fetching recent projects:", error);
     return [];
   }
@@ -36,11 +43,10 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen bg-background transition-colors duration-300">
       
       {/* --- HERO SECTION --- */}
-      <section className="bg-primary text-primary-foreground py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <section className="bg-primary text-primary-foreground py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
-            {isLoggedIn ? "Welcome Back" : "Build. Share. Collaborate."}
+            {isLoggedIn ? "Welcome Back, Builder." : "Build. Share. Collaborate."}
           </h1>
           <p className="text-xl md:text-2xl mb-10 text-primary-foreground/80 max-w-3xl mx-auto">
             {isLoggedIn 
@@ -51,7 +57,7 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="/components"
-              className="bg-background text-foreground px-8 py-3 rounded-lg font-bold text-lg hover:bg-background/90 transition-colors shadow-lg"
+              className="bg-primary-foreground text-primary px-8 py-3 rounded-lg font-bold text-lg hover:bg-primary-foreground/90 transition-colors shadow-lg"
             >
               {isLoggedIn ? "Browse Marketplace" : "Browse Components"}
             </Link>
@@ -80,7 +86,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-3 gap-10">
             {/* Feature 1 */}
             <div className="p-8 bg-card rounded-2xl border border-border hover:shadow-xl transition-shadow text-center group">
-              <div className="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform">
                 📦
               </div>
               <h3 className="text-xl font-bold mb-3 text-foreground">Component Lending</h3>
@@ -91,7 +97,7 @@ export default async function Home() {
 
             {/* Feature 2 */}
             <div className="p-8 bg-card rounded-2xl border border-border hover:shadow-xl transition-shadow text-center group">
-              <div className="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform">
                 🚀
               </div>
               <h3 className="text-xl font-bold mb-3 text-foreground">Project Showcase</h3>
@@ -102,7 +108,7 @@ export default async function Home() {
 
             {/* Feature 3 */}
             <div className="p-8 bg-card rounded-2xl border border-border hover:shadow-xl transition-shadow text-center group">
-              <div className="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 text-3xl group-hover:scale-110 transition-transform">
                 🤝
               </div>
               <h3 className="text-xl font-bold mb-3 text-foreground">Trust & Community</h3>
@@ -124,7 +130,7 @@ export default async function Home() {
                 <h2 className="text-3xl font-bold text-foreground">Fresh from the Lab 🧪</h2>
                 <p className="mt-2 text-muted-foreground">Latest innovations by your college peers.</p>
               </div>
-              <Link href="/projects" className="text-accent font-medium hover:underline hidden sm:block">
+              <Link href="/projects" className="text-primary font-medium hover:underline hidden sm:block">
                 View All Projects &rarr;
               </Link>
             </div>
@@ -134,7 +140,7 @@ export default async function Home() {
                 {recentProjects.map((project: any) => (
                   <Link href="/projects" key={project._id} className="group block h-full">
                     <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all h-full flex flex-col">
-                      <div className="h-2 bg-accent"></div>
+                      <div className="h-2 bg-primary"></div>
                       <div className="p-6 flex-1 flex flex-col">
                         <div className="flex justify-between items-start mb-4">
                           <span className="bg-secondary text-secondary-foreground text-xs font-bold px-2 py-1 rounded">
@@ -144,13 +150,13 @@ export default async function Home() {
                             by {project.userId?.name}
                           </span>
                         </div>
-                        <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
+                        <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
                           {project.title}
                         </h3>
                         <p className="text-muted-foreground text-sm line-clamp-3 mb-4 flex-1">
                           {project.description}
                         </p>
-                        <div className="text-sm font-medium text-accent mt-auto">
+                        <div className="text-sm font-medium text-primary mt-auto">
                           Read Documentation &rarr;
                         </div>
                       </div>
@@ -161,14 +167,14 @@ export default async function Home() {
             ) : (
               <div className="text-center py-10 border-2 border-dashed border-border rounded-xl">
                 <p className="text-muted-foreground">No projects yet. Be the first to upload!</p>
-                <Link href="/projects/add" className="text-accent font-bold mt-2 inline-block">
+                <Link href="/projects/add" className="text-primary font-bold mt-2 inline-block">
                   Upload Project
                 </Link>
               </div>
             )}
             
             <div className="mt-8 text-center sm:hidden">
-               <Link href="/projects" className="text-accent font-medium hover:underline">
+               <Link href="/projects" className="text-primary font-medium hover:underline">
                 View All Projects &rarr;
               </Link>
             </div>
@@ -185,22 +191,22 @@ export default async function Home() {
               </h2>
               <div className="grid md:grid-cols-4 gap-8 text-center">
                 <div className="relative">
-                  <div className="text-[#FF6D1F] text-6xl font-bold  mb-4">01</div>
+                  <div className="text-6xl font-bold text-muted/20 mb-4">01</div>
                   <h4 className="text-lg font-semibold text-foreground mb-2">Sign Up</h4>
                   <p className="text-sm text-muted-foreground">Register with your college email ID to verify your student status.</p>
                 </div>
                 <div className="relative">
-                  <div className="text-[#FF6D1F] text-6xl font-bold  mb-4">02</div>
+                  <div className="text-6xl font-bold text-muted/20 mb-4">02</div>
                   <h4 className="text-lg font-semibold text-foreground mb-2">List or Request</h4>
                   <p className="text-sm text-muted-foreground">Post extra components you own or request items you need.</p>
                 </div>
                 <div className="relative">
-                  <div className="text-[#FF6D1F] text-6xl font-bold  mb-4">03</div>
+                  <div className="text-6xl font-bold text-muted/20 mb-4">03</div>
                   <h4 className="text-lg font-semibold text-foreground mb-2">Connect</h4>
                   <p className="text-sm text-muted-foreground">Approve requests via the dashboard and meet on campus.</p>
                 </div>
                 <div className="relative">
-                  <div className="text-[#FF6D1F] text-6xl font-bold  mb-4">04</div>
+                  <div className="text-6xl font-bold text-muted/20 mb-4">04</div>
                   <h4 className="text-lg font-semibold text-foreground mb-2">Build & Return</h4>
                   <p className="text-sm text-muted-foreground">Complete your project, return the item, and earn reputation points.</p>
                 </div>
@@ -209,21 +215,21 @@ export default async function Home() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-primary text-primary-foreground py-20">
+          <section className="bg-card-alt text-foreground py-20">
             <div className="max-w-4xl mx-auto px-4 text-center">
               <h2 className="text-3xl font-bold mb-6">Ready to start building?</h2>
-              <p className="mb-8 text-primary-foreground/80 text-lg">
+              <p className="mb-8 text-muted-foreground text-lg">
                 Join students from CSE, ECE, ME, and more. 
                 Stop working in silos and start leveraging the community power.
               </p>
               <Link
                 href="/register"
-                className="inline-block bg-background text-foreground font-bold py-4 px-10 rounded-full transition-all transform hover:scale-105 shadow-lg"
+                className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-4 px-10 rounded-full transition-all transform hover:scale-105 shadow-lg"
               >
                 Create Your Account
               </Link>
-              <p className="mt-4 text-sm text-primary-foreground/60">
-                Already have an account? <Link href="/login" className="text-primary-foreground font-bold hover:underline">Log in here</Link>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Already have an account? <Link href="/login" className="text-primary hover:underline">Log in here</Link>
               </p>
             </div>
           </section>
