@@ -26,6 +26,7 @@ export default function MarketplacePage() {
   const [components, setComponents] = useState<ComponentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<"GIVE" | "TAKE">("GIVE");
+  const [searchQuery, setSearchQuery] = useState("");
   const [requestingId, setRequestingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -73,8 +74,15 @@ export default function MarketplacePage() {
     }
   };
 
-  // Filter the list based on the selected tab
-  const filteredComponents = components.filter((c) => c.type === filterType);
+  // Filter the list based on the selected tab and search query
+  const filteredComponents = components.filter((c) => {
+    const matchesType = c.type === filterType;
+    const matchesSearch = 
+      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.category.toLowerCase().includes(searchQuery.toLowerCase());
+      
+    return matchesType && matchesSearch;
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-background min-h-screen transition-colors duration-300">
@@ -96,6 +104,23 @@ export default function MarketplacePage() {
             + List Item / Request
           </Link>
         </div>
+      </div>
+
+      {/* --- SEARCH BAR --- */}
+      <div className="relative mb-6">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          {/* Magnifying Glass Icon */}
+          <svg className="h-5 w-5 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          className="block w-full pl-10 pr-3 py-3 border border-input rounded-md leading-5 bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring focus:border-input sm:text-sm shadow-sm"
+          placeholder="Search components (e.g., 'Arduino', 'Motor', 'Sensor')..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {/* Tabs */}
@@ -129,7 +154,9 @@ export default function MarketplacePage() {
         <div className="text-center py-10 text-muted-foreground">Loading...</div>
       ) : filteredComponents.length === 0 ? (
         <div className="text-center py-10 bg-card rounded-lg shadow border border-border">
-          <p className="text-muted-foreground">No items found in this category.</p>
+          <p className="text-muted-foreground">
+             {searchQuery ? `No matches found for "${searchQuery}"` : "No items found in this category."}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -58,26 +58,26 @@ export default function AddProjectPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-black text-2xl font-bold mb-6">Upload Project Documentation</h1>
+    <div className="max-w-2xl mx-auto px-4 py-8 bg-background min-h-screen text-foreground transition-colors duration-300">
+      <h1 className="text-2xl font-bold mb-6">Upload Project Documentation</h1>
 
       {error && (
-        <div className="bg-red-50 text-red-500 p-4 rounded-md mb-6">
+        <div className="bg-destructive/10 text-destructive p-4 rounded-md mb-6 border border-destructive/20">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg shadow-sm border border-border">
         
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Project Title</label>
+          <label className="block text-sm font-medium text-foreground">Project Title</label>
           <input
             type="text"
             name="title"
             required
             placeholder="e.g., Smart Irrigation System"
-            className="text-black mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+            className="mt-1 block w-full rounded-md border-input bg-background text-foreground shadow-sm focus:border-ring focus:ring-ring sm:text-sm p-2 border transition-colors"
             value={formData.title}
             onChange={handleChange}
           />
@@ -85,13 +85,13 @@ export default function AddProjectPage() {
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Description / Documentation</label>
+          <label className="block text-sm font-medium text-foreground">Description / Documentation</label>
           <textarea
             name="description"
             rows={6}
             required
             placeholder="Describe your project, the problem it solves, and how it works..."
-            className="text-black mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+            className="mt-1 block w-full rounded-md border-input bg-background text-foreground shadow-sm focus:border-ring focus:ring-ring sm:text-sm p-2 border transition-colors"
             value={formData.description}
             onChange={handleChange}
           />
@@ -99,13 +99,13 @@ export default function AddProjectPage() {
 
         {/* Tech Stack */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Tech Stack (Comma separated)</label>
+          <label className="block text-sm font-medium text-foreground">Tech Stack (Comma separated)</label>
           <input
             type="text"
             name="techStack"
             required
             placeholder="e.g., Arduino, React, Node.js, 3D Printing"
-            className="text-black mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+            className="mt-1 block w-full rounded-md border-input bg-background text-foreground shadow-sm focus:border-ring focus:ring-ring sm:text-sm p-2 border transition-colors"
             value={formData.techStack}
             onChange={handleChange}
           />
@@ -113,12 +113,12 @@ export default function AddProjectPage() {
 
         {/* GitHub Link */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">GitHub / Documentation Link (Optional)</label>
+          <label className="block text-sm font-medium text-foreground">GitHub / Documentation Link (Optional)</label>
           <input
             type="url"
             name="githubLink"
             placeholder="https://github.com/username/repo"
-            className="text-black mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+            className="mt-1 block w-full rounded-md border-input bg-background text-foreground shadow-sm focus:border-ring focus:ring-ring sm:text-sm p-2 border transition-colors"
             value={formData.githubLink}
             onChange={handleChange}
           />
@@ -127,7 +127,7 @@ export default function AddProjectPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring disabled:opacity-50 transition-colors"
         >
           {loading ? "Uploading..." : "Publish Project"}
         </button>

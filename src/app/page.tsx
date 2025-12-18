@@ -107,14 +107,14 @@ export default function Home() {
             <div className="relative">
               <div className=" text-6xl font-bold text-[#FF6D1F] mb-4">03</div>
               <h4 className="text-lg font-semibold mb-2">Connect</h4>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Approve requests via the dashboard and meet on campus.
               </p>
             </div>
             <div className="relative">
               <div className="text-6xl font-bold text-[#FF6D1F] mb-4">04</div>
               <h4 className="text-lg font-semibold mb-2">Build & Return</h4>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 Complete your project, return the item, and earn reputation
                 points.
               </p>
